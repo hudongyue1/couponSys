@@ -9,7 +9,7 @@ import { default as Web3 } from 'web3'
 import { default as contract } from 'truffle-contract'
 
 // Import our contract artifacts and turn them into usable abstractions.
-import ScoreArtifacts from '../../build/contracts/Score'
+import ScoreArtifacts from '../../build/contracts/CouponSys'
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
 let ScoreContract = contract(ScoreArtifacts)
@@ -46,31 +46,35 @@ window.App = {
       console.log(e, null)
     })
   },
-  // 新建客户
+  // 创建用户
   newCustomer: function () {
     customer.newCustomer(ScoreInstance, account)
   },
-  // 客户登录
+  // 用户登录
   customerLogin: function () {
     customer.customerLogin(ScoreInstance, account)
   },
-  // 当前客户信息
+  // 当前用户信息
   getCurrentCustomer: function (currentAccount) {
     customer.showCurrentAccount(currentAccount)
   },
-  // 当前客户余额
+  // 当前用户积分余额
   getScoreWithCustomerAddr: function (currentAccount) {
     customer.getScoreWithCustomerAddr(currentAccount, ScoreInstance, account)
   },
-  // 客户购买商品
-  buyGood: function (currentAccount) {
-    customer.buyGood(currentAccount, ScoreInstance, account)
+  // 用户购买优惠券
+  buyCoupon: function (currentAccount) {
+    customer.buyCoupon(currentAccount, ScoreInstance, account)
   },
-  // 查看已经购买的物品
-  getGoodsByCustomer: function (currentAccount) {
-    customer.getGoodsByCustomer(currentAccount, ScoreInstance, account)
+  // // 用户使用优惠券
+  useCoupon: function (currentAccount) {
+    customer.useCoupon(currentAccount, ScoreInstance, account)
   },
-  // 客户转让积分
+  // 查看已经兑换的优惠券
+  getCouponsByCustomer: function (currentAccount) {
+    customer.getCouponsByCustomer(currentAccount, ScoreInstance, account)
+  },
+  // 用户转让积分
   transferScoreToAnotherFromCustomer: function (currentAccount) {
     customer.transferScoreToAnotherFromCustomer(currentAccount, ScoreInstance, account)
   },
@@ -94,13 +98,13 @@ window.App = {
   transferScoreToAnotherFromMerchant: function (currentAccount) {
     merchant.transferScoreToAnotherFromMerchant(currentAccount, ScoreInstance, account)
   },
-  // 商家添加商品
-  addGood: function (currentAccount) {
-    merchant.addGood(currentAccount, ScoreInstance, account)
+  // 商家添加优惠券
+  addCoupon: function (currentAccount) {
+    merchant.addCoupon(currentAccount, ScoreInstance, account)
   },
-  // 显示商家的所有商品
-  getGoodsByMerchant: function (currentAccount) {
-    merchant.getGoodsByMerchant(currentAccount, ScoreInstance, account)
+  // 显示商家的所有优惠券
+  getCouponsByMerchant: function (currentAccount) {
+    merchant.getCouponsByMerchant(currentAccount, ScoreInstance, account)
   },
   // 商家清算积分
   settleScoreWithBank: function (currentAccount) {

@@ -1,4 +1,4 @@
-var Score = artifacts.require("./Score.sol");
+var CouponSys = artifacts.require("./CouponSys.sol");
 module.exports = function(deployer) {
-  deployer.deploy(Score);
+  deployer.deploy(CouponSys);
 };

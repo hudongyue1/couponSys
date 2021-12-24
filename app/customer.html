@@ -15,7 +15,7 @@
 <div>
 
 
-    <h1>电子积分案例</h1>
+    <h1>优惠券兑换系统</h1>
     <div id="info">
         <p id="status">Status</p>
     </div>
@@ -29,7 +29,7 @@
         <br>
         <button onclick="App.getScoreWithCustomerAddr(currentAccount)">当前余额</button>
         <br>
-        <button onclick="App.getGoodsByCustomer(currentAccount)">查看已购买商品</button>
+        <button onclick="App.getCouponsByCustomer(currentAccount)">查看已兑换优惠券</button>
     </div>
     <div class="block">
         <h3>转让积分</h3>
@@ -40,12 +40,17 @@
         <button onclick="App.transferScoreToAnotherFromCustomer(currentAccount)">转让积分</button>
     </div>
     <div class="block">
-        <h3>购买商品</h3>
-        <label for="goodId">购买商品Id</label><input type="text" id="goodId">
+        <h3>兑换优惠券</h3>
+        <label for="couponId">兑换优惠券Id</label><input type="text" id="couponId">
         <br>
-        <button id="buyGood" onclick="App.buyGood(currentAccount)">购买商品</button>
+        <button id="buyCoupon" onclick="App.buyCoupon(currentAccount)">兑换优惠券</button>
     </div>
-
+    <div class="block">
+        <h3>使用优惠券</h3>
+        <label for="couponId">使用优惠券Id</label><input type="text" id="couponId">
+        <br>
+        <button id="useCoupon" onclick="App.useCoupon(currentAccount)">使用优惠券</button>
+    </div>
     <br/>
     <h2>测试信息</h2>
     <div>

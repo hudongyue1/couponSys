@@ -15,7 +15,7 @@
 <div>
 
 
-    <h1>电子积分案例</h1>
+    <h1>优惠券兑换系统</h1>
     <div id="info">
         <p id="status">Status</p>
     </div>
@@ -40,12 +40,12 @@
         </button>
     </div>
     <div class="block">
-        <h3>添加商品</h3>
-        <br><br><br><label for="goodId">商品ID</label><input type="text" id="goodId">
-        <br><label for="goodPrice">商品价格</label><input type="text" id="goodPrice">
+        <h3>添加优惠券</h3>
+        <br><br><br><label for="couponId">优惠券ID</label><input type="text" id="couponId">
+        <br><label for="couponPrice">优惠券积分</label><input type="text" id="couponPrice">
         <br>
-        <button onclick="App.addGood(currentAccount)">添加商品</button>
-        <button onclick="App.getGoodsByMerchant(currentAccount)">查看已添加商品</button>
+        <button onclick="App.addCoupon(currentAccount)">添加优惠券</button>
+        <button onclick="App.getCouponsByMerchant(currentAccount)">查看已添加优惠券</button>
     </div>
 
     <div class="block">

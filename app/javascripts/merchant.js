@@ -63,12 +63,12 @@ module.exports = {
       }
     })
   },
-  // 商户增加一件商品：默认gas会OOG
-  addGood: function (currentAccount, ScoreInstance, account) {
-    const goodId = document.getElementById('goodId').value
-    const goodPrice = parseInt(document.getElementById('goodPrice').value)
-    ScoreInstance.addGood(currentAccount, goodId, goodPrice, { from: account, gas: 2000000 }).then(function () {
-      ScoreInstance.AddGood(function (error, event) {
+  // 商户增加一件优惠券：默认gas会OOG
+  addCoupon: function (currentAccount, ScoreInstance, account) {
+    const couponId = document.getElementById('couponId').value
+    const couponPrice = parseInt(document.getElementById('couponPrice').value)
+    ScoreInstance.addCoupon(currentAccount, couponId, couponPrice, { from: account, gas: 2000000 }).then(function () {
+      ScoreInstance.AddCoupon(function (error, event) {
         if (!error) {
           console.log(event.args.message)
           window.App.setStatus(event.args.message)
@@ -76,20 +76,20 @@ module.exports = {
       })
     })
   },
-  // 商户查看已添加的所有商品
-  getGoodsByMerchant: function (currentAccount, ScoreInstance, account) {
-    ScoreInstance.getGoodsByMerchant.call(currentAccount, { from: account }).then(function (result) {
+  // 商户查看已添加的所有优惠券
+  getCouponsByMerchant: function (currentAccount, ScoreInstance, account) {
+    ScoreInstance.getCouponsByMerchant.call(currentAccount, { from: account }).then(function (result) {
       console.log(result.length)
       console.log(result)
       if (result.length === 0) {
         window.App.setStatus('空...')
       }
-      let allGoods = ''
+      let allCoupons = ''
       result.forEach(e => {
-        allGoods += utils.hexCharCodeToStr(e) + ', '
+        allCoupons += utils.hexCharCodeToStr(e) + ', '
       })
-      allGoods = allGoods.substr(0, allGoods.length - 2)
-      window.App.setStatus(allGoods)
+      allCoupons = allCoupons.substr(0, allCoupons.length - 2)
+      window.App.setStatus(allCoupons)
     })
   },
   // 商户和银行进行积分清算

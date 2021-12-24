@@ -52,17 +52,17 @@ module.exports = {
       window.App.setStatus('出现异常，查询余额失败！')
     })
   },
-  //获取已经购买的物品
-  getGoodsByCustomer: function (currentAccount, ScoreInstance, account) {
-    ScoreInstance.getGoodsByCustomer.call(currentAccount, { from: account }).then(function (result) {
+  //获取已经购买的优惠券
+  getCouponsByCustomer: function (currentAccount, ScoreInstance, account) {
+    ScoreInstance.getCouponsByCustomer.call(currentAccount, { from: account }).then(function (result) {
       if (result.length === 0) {
         window.App.setStatus('空...')
       } else {
-        let goods = ''
+        let coupons = ''
         result.forEach(e => {
-          goods += utils.hexCharCodeToStr(e) + ', '
+          coupons += utils.hexCharCodeToStr(e) + ', '
         })
-        window.App.setStatus(goods.substr(0, goods.length - 2))
+        window.App.setStatus(coupons.substr(0, coupons.length - 2))
       }
     })
   },
@@ -78,11 +78,23 @@ module.exports = {
       }
     })
   },
-  // 购买物品
-  buyGood: function (currentAccount, ScoreInstance, account) {
-    const goodId = document.getElementById('goodId').value
-    ScoreInstance.buyGood(currentAccount, goodId, { from: account, gas: 1000000 }).then(function () {
-      ScoreInstance.BuyGood(function (error, event) {
+  //兑换优惠券
+  buyCoupon: function (currentAccount, ScoreInstance, account) {
+    const couponId = document.getElementById('couponId').value
+    ScoreInstance.buyCoupon(currentAccount, couponId, { from: account, gas: 1000000 }).then(function () {
+      ScoreInstance.BuyCoupon(function (error, event) {
+        if (!error) {
+          console.log(event.args.message)
+          window.App.setStatus(event.args.message)
+        }
+      })
+    })
+  },
+  //使用优惠券
+  useCoupon: function (currentAccount, ScoreInstance, account) {
+    const couponId = document.getElementById('couponId').value
+    ScoreInstance.useCoupon(currentAccount, couponId, { from: account, gas: 1000000 }).then(function () {
+      ScoreInstance.UseCoupon(function (error, event) {
         if (!error) {
           console.log(event.args.message)
           window.App.setStatus(event.args.message)

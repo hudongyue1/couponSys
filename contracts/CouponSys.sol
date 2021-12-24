@@ -26,7 +26,7 @@ contract Utils {
     }
 }
 
-contract Score is Utils {
+contract CouponSys is Utils {
 
 
     address owner; //合约的拥有者，银行
@@ -37,30 +37,32 @@ contract Score is Utils {
         address customerAddr; //客户address
         bytes32 password; //客户密码
         uint scoreAmount; //积分余额
-        bytes32[] buyGoods; //购买的商品数组
+        bytes32[] buyCoupons; //购买的优惠券数组
     }
 
     struct Merchant {
         address merchantAddr; //商户address
         bytes32 password; //商户密码
         uint scoreAmount; //积分余额
-        bytes32[] sellGoods; //发布的商品数组
+        bytes32[] sellCoupons; //发布的优惠券数组
     }
 
-    struct Good {
-        bytes32 goodId; //商品Id;
-        uint price; //价格；
-        address belong; //商品属于哪个商户address；
+    struct Coupon {
+        bytes32 couponId; //优惠券Id;
+        uint price; //优惠券需要积分
+        // uint discount; //优惠券折扣
+        address belong; //优惠券属于哪个商户address；
+        bool state; //优惠券是否已经使用
     }
 
 
     mapping(address => Customer) customer;
     mapping(address => Merchant) merchant;
-    mapping(bytes32 => Good) good; //根据商品Id查找该件商品
+    mapping(bytes32 => Coupon) coupon; //根据优惠券Id查找该件优惠券
 
     address[] customers; //已注册的客户数组
     address[] merchants; //已注册的商户数组
-    bytes32[] goods; //已经上线的商品数组
+    bytes32[] coupons; //已经上线的优惠券数组
 
     //增加权限控制，某些方法只能由合约的创建者调用
     modifier onlyOwner(){
@@ -250,71 +252,106 @@ contract Score is Utils {
         return settledScoreAmount;
     }
 
-    //商户添加一件商品
-    event AddGood(address sender, bool isSuccess, string message);
+    //商户添加一件优惠券
+    event AddCoupon(address sender, bool isSuccess, string message);
 
-    function addGood(address _merchantAddr, string memory _goodId, uint _price) public {
-        bytes32 tempId = stringToBytes32(_goodId);
+    function addCoupon(address _merchantAddr, string memory _couponId, uint _price) public {
+        bytes32 tempId = stringToBytes32(_couponId);
 
-        //首先判断该商品Id是否已经存在
-        if (!isGoodAlreadyAdd(tempId)) {
-            good[tempId].goodId = tempId;
-            good[tempId].price = _price;
-            good[tempId].belong = _merchantAddr;
+        //首先判断该优惠券Id是否已经存在
+        if (!isCouponAlreadyAdd(tempId)) {
+            coupon[tempId].couponId = tempId;
+            coupon[tempId].price = _price;
+            coupon[tempId].belong = _merchantAddr;
+            coupon[tempId].state = false;
 
-            goods.push(tempId);
-            merchant[_merchantAddr].sellGoods.push(tempId);
-            emit AddGood(msg.sender, true, "创建商品成功");
+            coupons.push(tempId);
+            merchant[_merchantAddr].sellCoupons.push(tempId);
+            emit AddCoupon(msg.sender, true, "创建优惠券成功");
             return;
         }
         else {
-            emit AddGood(msg.sender, false, "该件商品已经添加，请确认后操作");
+            emit AddCoupon(msg.sender, false, "该优惠券已经添加，请确认后操作");
             return;
         }
     }
 
-    //商户查找自己的商品数组
-    function getGoodsByMerchant(address _merchantAddr) view public returns (bytes32[] memory) {
-        return merchant[_merchantAddr].sellGoods;
+    //商户查找自己的优惠券数组
+    function getCouponsByMerchant(address _merchantAddr) view public returns (bytes32[] memory) {
+        return merchant[_merchantAddr].sellCoupons;
     }
 
-    //用户用积分购买一件商品
-    event BuyGood(address sender, bool isSuccess, string message);
+    //用户用积分兑换优惠券
+    event BuyCoupon(address sender, bool isSuccess, string message);
 
-    function buyGood(address _customerAddr, string memory _goodId) public {
-        //首先判断输入的商品Id是否存在
-        bytes32 tempId = stringToBytes32(_goodId);
-        if (isGoodAlreadyAdd(tempId)) {
-            //该件商品已经添加，可以购买
-            if (customer[_customerAddr].scoreAmount < good[tempId].price) {
-                emit BuyGood(msg.sender, false, "余额不足，购买商品失败");
+    function buyCoupon(address _customerAddr, string memory _couponId) public {
+        //首先判断输入的优惠券Id是否存在
+        bytes32 tempId = stringToBytes32(_couponId);
+        if (isCouponAlreadyAdd(tempId)) {
+            //该优惠券已经添加，可以兑换
+            if (customer[_customerAddr].scoreAmount < coupon[tempId].price) {
+                emit BuyCoupon(msg.sender, false, "积分不足，兑换优惠券失败");
                 return;
             }
             else {
                 //对这里的方法抽取
-                customer[_customerAddr].scoreAmount -= good[tempId].price;
-                merchant[good[tempId].belong].scoreAmount += good[tempId].price;
-                customer[_customerAddr].buyGoods.push(tempId);
-                emit BuyGood(msg.sender, true, "购买商品成功");
+                customer[_customerAddr].scoreAmount -= coupon[tempId].price;
+                merchant[coupon[tempId].belong].scoreAmount += coupon[tempId].price;
+                customer[_customerAddr].buyCoupons.push(tempId);
+                emit BuyCoupon(msg.sender, true, "购买优惠券成功");
                 return;
             }
         }
         else {
-            //没有这个Id的商品
-            emit BuyGood(msg.sender, false, "输入商品Id不存在，请确定后购买");
+            //没有这个Id的优惠券
+            emit BuyCoupon(msg.sender, false, "输入优惠券Id不存在，请确定后购买");
             return;
         }
     }
 
-    //客户查找自己的商品数组
-    function getGoodsByCustomer(address _customerAddr) view public returns (bytes32[] memory) {
-        return customer[_customerAddr].buyGoods;
+    //用户使用优惠券
+    event UseCoupon(address sender, bool isSuccess, string message);
+
+    function useCoupon(address _customerAddr, string memory _couponId) public {
+        //首先判断输入的优惠券Id是否存在
+        bytes32 tempId = stringToBytes32(_couponId);
+        if (isCouponAlreadyAdd(tempId) && isCustomerHasTheCoupon(_customerAddr, tempId)) {
+            //判断该优惠券是否已经使用
+            if(coupon[tempId].state) {
+                emit UseCoupon(msg.sender, false, "该优惠券已经使用，请勿重复使用");
+            }else {
+                //该优惠券已经添加，可以使用
+                coupon[tempId].state = true;
+                emit UseCoupon(msg.sender, true, "使用优惠券成功");
+                return;
+            }
+        }
+        else {
+            //没有这个Id的优惠券
+            emit UseCoupon(msg.sender, false, "该用户没有此优惠券");
+            return;
+        }
     }
 
-    //首先判断输入的商品Id是否存在
-    function isGoodAlreadyAdd(bytes32 _goodId) internal view returns (bool) {
-        for (uint i = 0; i < goods.length; i++) {
-            if (goods[i] == _goodId) {
+    function isCustomerHasTheCoupon(address _customerAddr, bytes32 _couponId) internal view returns (bool) {
+        uint len = customer[_customerAddr].buyCoupons.length;
+        for (uint i = 0; i < len; i++) {
+            if (customer[_customerAddr].buyCoupons[i] == _couponId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //客户查找自己的优惠券数组
+    function getCouponsByCustomer(address _customerAddr) view public returns (bytes32[] memory) {
+        return customer[_customerAddr].buyCoupons;
+    }
+
+    //首先判断输入的优惠券Id是否存在
+    function isCouponAlreadyAdd(bytes32 _couponId) internal view returns (bool) {
+        for (uint i = 0; i < coupons.length; i++) {
+            if (coupons[i] == _couponId) {
                 return true;
             }
         }
