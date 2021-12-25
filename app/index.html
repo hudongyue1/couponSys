@@ -5,6 +5,25 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <script src="./app.js"></script>
 </head>
+    <style>
+        .button {
+        background-color: #4CAF50; /* 绿色 */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        }
+        
+        .button2 {background-color: #008CBA;} /* 蓝色 */
+        .button3 {background-color: #f44336;} /* 黑色 */ 
+        .button4 {background-color: #e7e7e7; color: black;} /* 灰色 */ 
+        .button5 {background-color: #555555;} /* 黑色 */
+    </style>
 <body>
 <div >
 
@@ -16,24 +35,6 @@
 
     <br/>
     <br/>
-    <h2>客户端</h2>
-    <div class="block">
-        <h3>客户注册</h3>
-        <label for="customerAddress">客户账户</label><input type="text" id="customerAddress"
-                                                             placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"/>
-        <br/><label for="customerPassword">密码</label><input type="text" id="customerPassword"
-                                                            placeholder="e.g., 123456"/>
-        <button onclick="App.newCustomer()">客户注册</button>
-    </div>
-    <div class="block">
-        <h3>客户登录</h3>
-        <label for="customerLoginAddr">客户地址</label><input type="text" id="customerLoginAddr"
-                                                                       placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae">
-        <br><label for="customerLoginPwd">密码</label><input type="text" id="customerLoginPwd"
-                                                            placeholder="e.g., ******">
-        <button id="customerLogin" onclick="App.customerLogin()">客户登录</button>
-
-    </div>
 
     <h2>商家端</h2>
     <div class="block">
@@ -43,7 +44,7 @@
                                                                      placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae">
         <br><label for="merchantPassword">密码</label><input type="text" id="merchantPassword" placeholder="e.g., ******">
         <br>
-        <button id="newMerchant" onclick="App.newMerchant()">商户注册</button>
+        <button class="button" id="newMerchant" onclick="App.newMerchant()">商户注册</button>
 
     </div>
 
@@ -53,9 +54,27 @@
                                                                        placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae">
         <br><label for="merchantLoginPwd">密码</label><input type="text" id="merchantLoginPwd" placeholder="e.g., ******">
         <br>
-        <button id="merchantLogin" onclick="App.merchantLogin()">商户登录</button>
+        <button class="button2" id="merchantLogin" onclick="App.merchantLogin()">商户登录</button>
     </div>
 
+    <h2>客户端</h2>
+    <div class="block">
+        <h3>客户注册</h3>
+        <label for="customerAddress">客户账户</label><input type="text" id="customerAddress"
+                                                             placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"/>
+        <br/><label for="customerPassword">密码</label><input type="text" id="customerPassword"
+                                                            placeholder="e.g., 123456"/>
+        <button class="button" onclick="App.newCustomer()">客户注册</button>
+    </div>
+    <div class="block">
+        <h3>客户登录</h3>
+        <label for="customerLoginAddr">客户地址</label><input type="text" id="customerLoginAddr"
+                                                                       placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae">
+        <br><label for="customerLoginPwd">密码</label><input type="text" id="customerLoginPwd"
+                                                            placeholder="e.g., ******">
+        <button class="button2" id="customerLogin" onclick="App.customerLogin()">客户登录</button>
+
+    </div>
 
     <h2>银行端</h2>
     <div class="block">
@@ -64,7 +83,7 @@
                                                                    placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae">
         <br><label for="bankLoginPwd">密码</label><input type="text" id="bankLoginPwd" placeholder="e.g., ******">
         <br>
-        <button id="bankLogin" onclick="App.bankLogin()">银行登录</button>
+        <button class="button2" id="bankLogin" onclick="App.bankLogin()">银行登录</button>
     </div>
 
 
